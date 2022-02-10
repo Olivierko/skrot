@@ -1,0 +1,19 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://olivierko: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@github.com/olivierko/skrot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olivierko/skrot/issues"
+  },
+  "homepage": "https://github.com/olivierko/skrot#readme"
+}
