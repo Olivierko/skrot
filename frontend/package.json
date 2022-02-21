@@ -1,19 +1,23 @@
 {
-  "name": "frontend",
+  "name": "workout-tracker-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Olivierko/skrot.git"
+  "dependencies": {
+    "bulma": "^0.9.3",
+    "uuid": "^8.3.2",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.12"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/olivierko/skrot/issues"
-  },
-  "homepage": "https://github.com/olivierko/skrot#readme"
+  "devDependencies": {
+    "@types/node": "^17.0.8",
+    "@types/uuid": "^8.3.4",
+    "@vitejs/plugin-vue": "^2.0.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.7.2",
+    "vue-tsc": "^0.29.8"
+  }
 }
