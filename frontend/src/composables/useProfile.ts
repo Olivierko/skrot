@@ -20,7 +20,6 @@ export function useProfile() {
             method: "GET",
         }).catch((x) => x);
 
-
         const json = await response.json();
         const result = json as Profile;
         profile.unit = result.unit;
