@@ -21,7 +21,7 @@ export function useApi(): Api {
     };
 
     const invoke = async (resource: string, config: RequestInit, params?: URLSearchParams): Promise<Response> => {
-        const url = `${baseUrl}${resource}?${params ? params : ''}`;
+        const url = `${baseUrl}${resource}${params ? `?${params}` : ''}`;
 
         config = {
             ...config,
