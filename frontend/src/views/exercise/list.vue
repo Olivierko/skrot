@@ -13,9 +13,15 @@
         <table class="table is-fullwidth is-striped">
           <thead>
             <tr>
-              <th><abbr title="Name">Name</abbr></th>
-              <th><abbr title="Category">Category</abbr></th>
-              <th><abbr title="Category">Muscle group</abbr></th>
+              <th>
+                <abbr title="Name">Name</abbr>
+              </th>
+              <th>
+                <abbr title="Category">Category</abbr>
+              </th>
+              <th>
+                <abbr title="Category">Muscle group</abbr>
+              </th>
               <th>&nbsp;</th>
             </tr>
           </thead>
@@ -43,31 +49,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { useRouter } from "vue-router";
 import { Exercise } from "@/types";
 import { useExercises } from "@/composables/useExercises";
 import { useCategories } from "@/composables/useCategories";
 import { useMuscleGroups } from "@/composables/useMuscleGroups";
 
-export default defineComponent({
-  setup() {
-    const router = useRouter();
-    const { exercises } = useExercises();
-    const { find: findCategory } = useCategories();
-    const { find: findMuscleGroup } = useMuscleGroups();
+const router = useRouter();
+const { exercises } = useExercises();
+const { find: findCategory } = useCategories();
+const { find: findMuscleGroup } = useMuscleGroups();
 
-    const edit = (exercise: Exercise) => {
-      router.push({ name: "/exercise/edit", params: { id: exercise.id } });
-    };
-
-    return {
-      exercises,
-      findCategory,
-      findMuscleGroup,
-      edit,
-    };
-  },
-});
+const edit = (exercise: Exercise) => {
+  router.push({ name: "/exercise/edit", params: { id: exercise.id } });
+};
 </script>

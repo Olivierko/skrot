@@ -5,7 +5,10 @@
         <div class="container">
           <p class="title">
             Edit exercise
-            <button @click.prevent="promptRemove = true" class="button is-pulled-right is-danger">
+            <button
+              @click.prevent="promptRemove = true"
+              class="button is-pulled-right is-danger"
+            >
               <span class="icon is-small">
                 <i class="fas fa-trash-alt"></i>
               </span>
@@ -21,10 +24,12 @@
             <div class="control is-expanded has-icons-left">
               <span class="select is-fullwidth" :class="{ 'is-loading': isCategoriesLoading }">
                 <select v-model="model.categoryId" required>
-                  <option value="" disabled selected>Select category</option>
-                  <option v-for="category in categories" :key="category.id" :value="category.id">
-                    {{ category.name }}
-                  </option>
+                  <option value disabled selected>Select category</option>
+                  <option
+                    v-for="category in categories"
+                    :key="category.id"
+                    :value="category.id"
+                  >{{ category.name }}</option>
                 </select>
               </span>
               <span class="icon is-small is-left">
@@ -37,10 +42,12 @@
             <div class="control is-expanded has-icons-left">
               <span class="select is-fullwidth" :class="{ 'is-loading': isMuscleGroupsLoading }">
                 <select v-model="model.muscleGroupId" required>
-                  <option value="" disabled selected>Select muscle group</option>
-                  <option v-for="muscleGroup in muscleGroups" :key="muscleGroup.id" :value="muscleGroup.id">
-                    {{ muscleGroup.name }}
-                  </option>
+                  <option value disabled selected>Select muscle group</option>
+                  <option
+                    v-for="muscleGroup in muscleGroups"
+                    :key="muscleGroup.id"
+                    :value="muscleGroup.id"
+                  >{{ muscleGroup.name }}</option>
                 </select>
               </span>
               <span class="icon is-small is-left">
@@ -51,7 +58,11 @@
 
           <div class="field">
             <div class="control">
-              <textarea class="textarea block" placeholder="Description" v-model="model.description"></textarea>
+              <textarea
+                class="textarea block"
+                placeholder="Description"
+                v-model="model.description"
+              ></textarea>
             </div>
           </div>
         </div>
@@ -76,8 +87,8 @@
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from "vue";
+<script setup lang="ts">
+import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Exercise } from "@/types";
 import { useExercises } from "@/composables/useExercises";
@@ -87,78 +98,58 @@ import Confirm from "@/components/confirm.vue";
 import LoadingOverlay from "@/components/loading-overlay.vue";
 import Notification from "@/components/notification.vue";
 
-export default defineComponent({
-  components: {
-    Confirm,
-    LoadingOverlay,
-    Notification,
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
   },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const router = useRouter();
-    const { get, edit, remove, isLoading } = useExercises();
-    const { isLoading: isCategoriesLoading, categories } = useCategories();
-    const { isLoading: isMuscleGroupsLoading, muscleGroups } = useMuscleGroups();
-    const promptRemove = ref(false);
-    const hasNotification = ref(false);
-    const notificationMessage = ref("");
+});
 
-    const model = reactive<Exercise>({
-      id: props.id,
-      name: "",
-      description: "",
-      categoryId: "",
-      muscleGroupId: "",
-    });
+const router = useRouter();
+const { get, edit, remove, isLoading } = useExercises();
+const { isLoading: isCategoriesLoading, categories } = useCategories();
+const { isLoading: isMuscleGroupsLoading, muscleGroups } = useMuscleGroups();
+const promptRemove = ref(false);
+const hasNotification = ref(false);
+const notificationMessage = ref("");
 
-    const onSubmit = async () => {
-      const result = await edit(props.id, model);
+const model = reactive<Exercise>({
+  id: props.id,
+  name: "",
+  description: "",
+  categoryId: "",
+  muscleGroupId: "",
+});
 
-      if (result.success) {
-        router.push({ name: "/exercise/list" });
-      } else {
-        hasNotification.value = true;
-        notificationMessage.value = result.error ?? "";
-      }
-    };
+const onSubmit = async () => {
+  const result = await edit(props.id, model);
 
-    const onRemove = async () => {
-      const result = await remove(props.id);
+  if (result.success) {
+    router.push({ name: "/exercise/list" });
+  }
+  else {
+    hasNotification.value = true;
+    notificationMessage.value = result.error ?? "";
+  }
+};
 
-      if (result.success) {
-        router.push({ name: "/exercise/list" });
-      } else {
-        hasNotification.value = true;
-        notificationMessage.value = result.error ?? "";
-      }
-    };
+const onRemove = async () => {
+  const result = await remove(props.id);
 
-    onMounted(async () => {
-      const exercise = await get(props.id);
-      model.name = exercise.name;
-      model.description = exercise.description;
-      model.categoryId = exercise.categoryId;
-      model.muscleGroupId = exercise.muscleGroupId;
-    });
+  if (result.success) {
+    router.push({ name: "/exercise/list" });
+  }
+  else {
+    hasNotification.value = true;
+    notificationMessage.value = result.error ?? "";
+  }
+};
 
-    return {
-      model,
-      isLoading,
-      promptRemove,
-      categories,
-      isCategoriesLoading,
-      muscleGroups,
-      isMuscleGroupsLoading,
-      hasNotification,
-      notificationMessage,
-      onSubmit,
-      onRemove,
-    };
-  },
+onMounted(async () => {
+  const exercise = await get(props.id);
+  model.name = exercise.name;
+  model.description = exercise.description;
+  model.categoryId = exercise.categoryId;
+  model.muscleGroupId = exercise.muscleGroupId;
 });
 </script>

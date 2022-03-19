@@ -7,37 +7,29 @@
   </modal>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import Modal from "@/components/modal.vue";
 
-export default defineComponent({
-  name: "Notification",
-  emits: ["update:visible"],
-  components: {
-    Modal,
-  },
-  props: {
-    visible: {
-      type: Boolean,
-      required: true,
-    },
-    message: {
-      type: String,
-      default: "",
-    },
-  },
-  setup(props, { emit }) {
-    const isVisible = computed<boolean>({
-      get() {
-        return props.visible;
-      },
-      set(value) {
-        emit("update:visible", value);
-      },
-    });
+const emit = defineEmits(["update:visible"]);
 
-    return { isVisible };
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    required: true,
+  },
+  message: {
+    type: String,
+    default: "",
+  },
+});
+
+const isVisible = computed<boolean>({
+  get() {
+    return props.visible;
+  },
+  set(value) {
+    emit("update:visible", value);
   },
 });
 </script>

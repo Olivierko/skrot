@@ -13,7 +13,9 @@
         <table class="table is-fullwidth is-striped">
           <thead>
             <tr>
-              <th><abbr title="Name">Name</abbr></th>
+              <th>
+                <abbr title="Name">Name</abbr>
+              </th>
               <th>&nbsp;</th>
             </tr>
           </thead>
@@ -39,25 +41,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { useRouter } from "vue-router";
 import { MuscleGroup } from "@/types";
 import { useMuscleGroups } from "@/composables/useMuscleGroups";
 
-export default defineComponent({
-  setup() {
-    const router = useRouter();
-    const { muscleGroups } = useMuscleGroups();
+const router = useRouter();
+const { muscleGroups } = useMuscleGroups();
 
-    const edit = (muscleGroup: MuscleGroup) => {
-      router.push({ name: "/muscle-group/edit", params: { id: muscleGroup.id } });
-    };
-
-    return {
-      muscleGroups,
-      edit,
-    };
-  },
-});
+const edit = (muscleGroup: MuscleGroup) => {
+  router.push({ name: "/muscle-group/edit", params: { id: muscleGroup.id } });
+};
 </script>

@@ -4,7 +4,14 @@
       <a class="navbar-item" href="https://bulma.io">
         <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
       </a>
-      <a @click="isActive = !isActive" role="button" class="navbar-burger" :class="{ 'is-active': isActive }" aria-label="menu" aria-expanded="false">
+      <a
+        @click="isActive = !isActive"
+        role="button"
+        class="navbar-burger"
+        :class="{ 'is-active': isActive }"
+        aria-label="menu"
+        aria-expanded="false"
+      >
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -49,50 +56,33 @@
   <notification v-model:visible="hasNotification" :message="notificationMessage"></notification>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, Ref, inject } from "vue";
+<script setup lang="ts">
+import { ref, Ref, inject } from "vue";
 import { useRouter } from "vue-router";
 import { useApi } from "@/composables/useApi";
 import LoadingOverlay from "@/components/loading-overlay.vue";
 import Notification from "@/components/notification.vue";
 
-export default defineComponent({
-  name: "Navigation",
-  components: {
-    LoadingOverlay,
-    Notification,
-  },
-  setup() {
-    const isActive = ref(false);
-    const isLoading = ref(false);
-    const hasNotification = ref(false);
-    const notificationMessage = ref("");
-    const isAuthenticated = inject<Ref<boolean>>("isAuthenticated")!;
+const isActive = ref(false);
+const isLoading = ref(false);
+const hasNotification = ref(false);
+const notificationMessage = ref("");
+const isAuthenticated = inject<Ref<boolean>>("isAuthenticated")!;
 
-    const router = useRouter();
-    const { logout } = useApi();
+const router = useRouter();
+const { logout } = useApi();
 
-    const onLogout = async () => {
-      isLoading.value = true;
-      const response = await logout();
-      isLoading.value = false;
+const onLogout = async () => {
+  isLoading.value = true;
+  const response = await logout();
+  isLoading.value = false;
 
-      if (!response.success) {
-        hasNotification.value = true;
-        notificationMessage.value = response.error ?? "";
-      } else {
-        router.go(0);
-      }
-    };
-
-    return {
-      isActive,
-      isLoading,
-      hasNotification,
-      notificationMessage,
-      isAuthenticated,
-      onLogout,
-    };
-  },
-});
+  if (!response.success) {
+    hasNotification.value = true;
+    notificationMessage.value = response.error ?? "";
+  } 
+  else {
+    router.go(0);
+  }
+};
 </script>

@@ -13,7 +13,9 @@
         <table class="table is-fullwidth is-striped">
           <thead>
             <tr>
-              <th><abbr title="Name">Name</abbr></th>
+              <th>
+                <abbr title="Name">Name</abbr>
+              </th>
               <th>&nbsp;</th>
             </tr>
           </thead>
@@ -39,25 +41,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { useRouter } from "vue-router";
 import { Category } from "@/types";
 import { useCategories } from "@/composables/useCategories";
 
-export default defineComponent({
-  setup() {
-    const router = useRouter();
-    const { categories } = useCategories();
+const router = useRouter();
+const { categories } = useCategories();
 
-    const edit = (category: Category) => {
-      router.push({ name: "/category/edit", params: { id: category.id } });
-    };
-
-    return {
-      categories,
-      edit,
-    };
-  },
-});
+const edit = (category: Category) => {
+  router.push({ name: "/category/edit", params: { id: category.id } });
+};
 </script>

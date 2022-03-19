@@ -1,9 +1,16 @@
 <template>
   <div class="tabs is-fullwidth">
     <ul>
-      <li v-for="tab in tabs" :key="tab.title" @click="selectedTitle = tab.title" :class="{ 'is-active': tab.title === selectedTitle }">
+      <li
+        v-for="tab in tabs"
+        :key="tab.title"
+        @click="selectedTitle = tab.title"
+        :class="{ 'is-active': tab.title === selectedTitle }"
+      >
         <a>
-          <span v-if="tab.icon" class="icon is-small"><i class="fa" :class="tab.icon" aria-hidden="true"></i></span>
+          <span v-if="tab.icon" class="icon is-small">
+            <i class="fa" :class="tab.icon" aria-hidden="true"></i>
+          </span>
           {{ tab.title }}
         </a>
       </li>
@@ -12,37 +19,29 @@
   <slot></slot>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, provide } from "vue";
+<script setup lang="ts">
+import { ref, useSlots, provide } from "vue";
 
 interface Tab {
   title: string;
   icon: string;
 }
 
-export default defineComponent({
-  name: "Tabs",
-  setup(_props, { slots }) {
-    const tabs = ref(
-      slots.default!().map<Tab>((tab) => {
-        const item: Tab = {
-          title: tab.props!.title,
-          icon: tab.props!.icon
-        };
-        
-        return item;
-      })
-    );
+const slots = useSlots();
 
-    const selectedTitle = ref(tabs.value[0].title);
-    provide("selectedTitle", selectedTitle);
-
-    return {
-      tabs,
-      selectedTitle,
+const tabs = ref(
+  slots.default!().map<Tab>((tab) => {
+    const item: Tab = {
+      title: tab.props!.title,
+      icon: tab.props!.icon
     };
-  },
-});
+
+    return item;
+  })
+);
+
+const selectedTitle = ref(tabs.value[0].title);
+provide("selectedTitle", selectedTitle);
 </script>
 
 <style scoped>

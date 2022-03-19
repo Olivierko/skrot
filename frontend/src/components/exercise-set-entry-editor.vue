@@ -19,7 +19,7 @@
       <div class="control">
         <div class="select">
           <select v-model="model.unit" required>
-            <option value="" disabled selected>Select unit</option>
+            <option value disabled selected>Select unit</option>
             <option v-for="unit in units" :key="unit" :value="unit">{{ unit }}</option>
           </select>
         </div>
@@ -57,67 +57,52 @@
   </td>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed, PropType } from "vue";
+<script setup lang="ts">
+import { ref, computed, PropType } from "vue";
 import { useProfile } from "@/composables/useProfile";
 import Confirm from "@/components/confirm.vue";
 import { ExerciseSetEntry } from "@/types";
 import { units } from "@/utilities/constants";
 
-export default defineComponent({
-  name: "ExerciseSetEntryEditor",
-  emits: ["update:entry", "moveUp", "moveDown", "remove"],
-  components: {
-    Confirm,
+const emit = defineEmits(["update:entry", "moveUp", "moveDown", "remove"]);
+
+const props = defineProps({
+  entry: {
+    type: Object as PropType<ExerciseSetEntry>,
+    required: true,
   },
-  props: {
-    entry: {
-      type: Object as PropType<ExerciseSetEntry>,
-      required: true,
-    },
-    index: {
-      type: Number,
-      required: true,
-    },
-  },
-  setup(props, { emit }) {
-    const { profile } = useProfile();
-
-    const model = computed<ExerciseSetEntry>({
-      get() {
-        return props.entry;
-      },
-      set(value) {
-        emit("update:entry", value);
-      },
-    });
-
-    if (!model.value.unit) {
-      model.value.unit = profile.unit;
-    }
-
-    const promptRemove = ref(false);
-
-    const onMoveUp = () => {
-      emit("moveUp", model.value);
-    };
-
-    const onMoveDown = () => {
-      emit("moveDown", model.value);
-    };
-
-    const onRemove = () => {
-      emit("remove", model.value);
-    };
-
-    return {
-      model,
-      promptRemove,
-      units,
-      onMoveUp,
-      onMoveDown,
-      onRemove,
-    };
+  index: {
+    type: Number,
+    required: true,
   },
 });
+
+const { profile } = useProfile();
+
+const model = computed<ExerciseSetEntry>({
+  get() {
+    return props.entry;
+  },
+  set(value) {
+    emit("update:entry", value);
+  },
+});
+
+if (!model.value.unit) {
+  model.value.unit = profile.unit;
+}
+
+const promptRemove = ref(false);
+
+const onMoveUp = () => {
+  emit("moveUp", model.value);
+};
+
+const onMoveDown = () => {
+  emit("moveDown", model.value);
+};
+
+const onRemove = () => {
+  emit("remove", model.value);
+};
 </script>

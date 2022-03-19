@@ -23,8 +23,8 @@
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from "vue";
+<script setup lang="ts">
+import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Workout } from "@/types";
 import { useWorkouts } from "@/composables/useWorkouts";
@@ -32,54 +32,39 @@ import WorkoutEditor from "@/components/workout-editor.vue";
 import LoadingOverlay from "@/components/loading-overlay.vue";
 import Notification from "@/components/notification.vue";
 
-export default defineComponent({
-  components: {
-    WorkoutEditor,
-    LoadingOverlay,
-    Notification,
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
   },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const router = useRouter();
-    const { get, create, isLoading } = useWorkouts();
-    const hasNotification = ref(false);
-    const notificationMessage = ref("");
+});
 
-    const model = reactive<Workout>({
-      id: "",
-      start: new Date(),
-      end: new Date(),
-      exercises: [],
-    });
+const router = useRouter();
+const { get, create, isLoading } = useWorkouts();
+const hasNotification = ref(false);
+const notificationMessage = ref("");
 
-    const onSubmit = async () => {
-      const result = await create(model);
+const model = reactive<Workout>({
+  id: "",
+  start: new Date(),
+  end: new Date(),
+  exercises: [],
+});
 
-      if (result.success) {
-        router.push({ name: "/workout/list" });
-      } else {
-        hasNotification.value = true;
-        notificationMessage.value = result.error ?? "";
-      }
-    };
+const onSubmit = async () => {
+  const result = await create(model);
 
-    onMounted(async () => {
-      const workout = await get(props.id);
-      model.exercises = workout.exercises;
-    });
+  if (result.success) {
+    router.push({ name: "/workout/list" });
+  }
+  else {
+    hasNotification.value = true;
+    notificationMessage.value = result.error ?? "";
+  }
+};
 
-    return {
-      model,
-      isLoading,
-      hasNotification,
-      notificationMessage,
-      onSubmit,
-    };
-  },
+onMounted(async () => {
+  const workout = await get(props.id);
+  model.exercises = workout.exercises;
 });
 </script>

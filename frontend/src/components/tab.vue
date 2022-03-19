@@ -4,27 +4,19 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, inject, computed } from "vue";
+<script setup lang="ts">
+import { ref, inject, computed } from "vue";
 
-export default defineComponent({
-  name: "Tab",
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
   },
-  setup(props) {
-    const selectedTitle = ref(inject<String>("selectedTitle"));
+});
 
-    const isSelected = computed<boolean>(() => {
-      return selectedTitle.value === props.title;
-    });
+const selectedTitle = ref(inject<String>("selectedTitle"));
 
-    return {
-      isSelected,
-    };
-  },
+const isSelected = computed<boolean>(() => {
+  return selectedTitle.value === props.title;
 });
 </script>

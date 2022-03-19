@@ -13,9 +13,15 @@
         <table class="table is-fullwidth is-striped">
           <thead>
             <tr>
-              <th><abbr title="Start">When</abbr></th>
-              <th><abbr title="Duration">Duration</abbr></th>
-              <th><abbr title="Exercise groups">Exercise groups</abbr></th>
+              <th>
+                <abbr title="Start">When</abbr>
+              </th>
+              <th>
+                <abbr title="Duration">Duration</abbr>
+              </th>
+              <th>
+                <abbr title="Exercise groups">Exercise groups</abbr>
+              </th>
               <th>&nbsp;</th>
             </tr>
           </thead>
@@ -52,41 +58,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { useRouter } from "vue-router";
 import { Workout } from "@/types";
 import { useWorkouts } from "@/composables/useWorkouts";
 import { toPrettyDate, toDifference } from "@/utilities/date";
 import Pagination from "@/components/pagination.vue";
 
-export default defineComponent({
-  components: {
-    Pagination,
-  },
-  setup() {
-    const router = useRouter();
-    const { workouts, page, pages, count, isLoading } = useWorkouts();
+const router = useRouter();
+const { workouts, page, pages, count, isLoading } = useWorkouts();
 
-    const copy = async (workout: Workout) => {
-      router.push({ name: "/workout/copy", params: { id: workout.id } });
-    };
+const copy = async (workout: Workout) => {
+  router.push({ name: "/workout/copy", params: { id: workout.id } });
+};
 
-    const edit = (workout: Workout) => {
-      router.push({ name: "/workout/edit", params: { id: workout.id } });
-    };
-
-    return {
-      isLoading,
-      page,
-      pages,
-      count,
-      workouts,
-      edit,
-      copy,
-      toPrettyDate,
-      toDifference,
-    };
-  },
-});
+const edit = (workout: Workout) => {
+  router.push({ name: "/workout/edit", params: { id: workout.id } });
+};
 </script>

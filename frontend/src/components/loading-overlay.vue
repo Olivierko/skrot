@@ -6,17 +6,12 @@
   </transition>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "LoadingOverlay",
-  props: {
-    visible: {
-      type: Boolean,
-      default: false,
-      required: true,
-    },
+<script setup lang="ts">
+defineProps({
+  visible: {
+    type: Boolean,
+    default: false,
+    required: true,
   },
 });
 </script>

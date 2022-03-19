@@ -5,7 +5,10 @@
         <div class="container">
           <p class="title">
             Edit category
-            <button @click.prevent="promptRemove = true" class="button is-pulled-right is-danger">
+            <button
+              @click.prevent="promptRemove = true"
+              class="button is-pulled-right is-danger"
+            >
               <span class="icon is-small">
                 <i class="fas fa-trash-alt"></i>
               </span>
@@ -38,8 +41,8 @@
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from "vue";
+<script setup lang="ts">
+import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Category } from "@/types";
 import { useCategories } from "@/composables/useCategories";
@@ -47,66 +50,50 @@ import Confirm from "@/components/confirm.vue";
 import LoadingOverlay from "@/components/loading-overlay.vue";
 import Notification from "@/components/notification.vue";
 
-export default defineComponent({
-  components: {
-    Confirm,
-    LoadingOverlay,
-    Notification,
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
   },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const router = useRouter();
-    const { get, edit, remove, isLoading } = useCategories();
-    const promptRemove = ref(false);
-    const hasNotification = ref(false);
-    const notificationMessage = ref("");
+});
 
-    const model = reactive<Category>({
-      id: props.id,
-      name: "",
-    });
+const router = useRouter();
+const { get, edit, remove, isLoading } = useCategories();
+const promptRemove = ref(false);
+const hasNotification = ref(false);
+const notificationMessage = ref("");
 
-    const onSubmit = async () => {
-      const result = await edit(props.id, model);
+const model = reactive<Category>({
+  id: props.id,
+  name: "",
+});
 
-      if (result.success) {
-        router.push({ name: "/category/list" });
-      } else {
-        hasNotification.value = true;
-        notificationMessage.value = result.error ?? "";
-      }
-    };
+const onSubmit = async () => {
+  const result = await edit(props.id, model);
 
-    const onRemove = async () => {
-      const result = await remove(props.id);
+  if (result.success) {
+    router.push({ name: "/category/list" });
+  }
+  else {
+    hasNotification.value = true;
+    notificationMessage.value = result.error ?? "";
+  }
+};
 
-      if (result.success) {
-        router.push({ name: "/category/list" });
-      } else {
-        hasNotification.value = true;
-        notificationMessage.value = result.error ?? "";
-      }
-    };
+const onRemove = async () => {
+  const result = await remove(props.id);
 
-    onMounted(async () => {
-      const category = await get(props.id);
-      model.name = category.name;
-    });
+  if (result.success) {
+    router.push({ name: "/category/list" });
+  }
+  else {
+    hasNotification.value = true;
+    notificationMessage.value = result.error ?? "";
+  }
+};
 
-    return {
-      model,
-      isLoading,
-      promptRemove,
-      hasNotification,
-      notificationMessage,
-      onSubmit,
-      onRemove,
-    };
-  },
+onMounted(async () => {
+  const category = await get(props.id);
+  model.name = category.name;
 });
 </script>

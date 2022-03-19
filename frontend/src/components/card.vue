@@ -14,35 +14,25 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import TransitionExpand from "@/components/transition-expand.vue";
 
-export default defineComponent({
-  name: "Card",
-  emits: ["update:open"],
-  components: {
-    TransitionExpand,
-  },
-  props: {
-    open: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  setup(props, { emit }) {
-    const isOpen = computed<boolean>({
-      get() {
-        return props.open;
-      },
-      set(value) {
-        emit("update:open", value);
-      },
-    });
+const emit = defineEmits(["update:open"]);
 
-    return {
-      isOpen,
-    };
+const props = defineProps({
+  open: {
+    type: Boolean,
+    required: true,
+  },
+});
+
+const isOpen = computed<boolean>({
+  get() {
+    return props.open;
+  },
+  set(value) {
+    emit("update:open", value);
   },
 });
 </script>

@@ -8,7 +8,7 @@
             <div class="control">
               <div class="select is-fullwidth">
                 <select v-model="model.unit" required>
-                  <option value="" disabled selected>Select unit</option>
+                  <option value disabled selected>Select unit</option>
                   <option v-for="unit in units" :key="unit" :value="unit">{{ unit }}</option>
                 </select>
               </div>
@@ -31,40 +31,23 @@
   </form>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 import { useProfile } from "@/composables/useProfile";
 import { units } from "@/utilities/constants";
 import LoadingOverlay from "@/components/loading-overlay.vue";
 import Notification from "@/components/notification.vue";
 
-export default defineComponent({
-  components: {
-    LoadingOverlay,
-    Notification,
-  },
-  setup() {
-    const { isLoading, profile: model, edit } = useProfile();
-    const hasNotification = ref(false);
-    const notificationMessage = ref("");
+const { isLoading, profile: model, edit } = useProfile();
+const hasNotification = ref(false);
+const notificationMessage = ref("");
 
-    const onSubmit = async () => {
-      const response = await edit(model);
+const onSubmit = async () => {
+  const response = await edit(model);
 
-      if (!response.success) {
-        hasNotification.value = true;
-        notificationMessage.value = response.error ?? "";
-      }
-    };
-
-    return {
-      units,
-      model,
-      isLoading,
-      hasNotification,
-      notificationMessage,
-      onSubmit,
-    };
-  },
-});
+  if (!response.success) {
+    hasNotification.value = true;
+    notificationMessage.value = response.error ?? "";
+  }
+};
 </script>
