@@ -29,7 +29,7 @@
             <tr v-for="workout in workouts" :key="workout.id" class="list-item">
               <td>{{ toPrettyDate(workout.start) }}</td>
               <td>{{ toDifference(workout.start, workout.end) }}</td>
-              <td>Chest, Triceps</td>
+              <td>{{ workout.muscleGroups.join(', ') }}</td>
               <td class="is-narrow">
                 <div class="field has-addons is-pulled-right">
                   <p class="control">

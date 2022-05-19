@@ -30,6 +30,7 @@ export interface Workout {
     start: Date;
     end: Date;
     exercises: ExerciseEntry[];
+    muscleGroups: string[];
 }
 
 export interface Category {

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Pagination, toPaginationResult } from '@/utility/pagination';
+import { Pagination, toPaginationResultTransform } from '@/utility/pagination';
 import { WorkoutEntity, ExerciseEntryEntity, ExerciseSetEntryEntity } from '@/workout/workout.entity';
-import { WorkoutDto } from '@/workout/workout.dto';
+import { WorkoutDto, WorkoutListDto } from '@/workout/workout.dto';
 
 @Injectable()
 export class WorkoutService {
@@ -49,11 +49,25 @@ export class WorkoutService {
         return await this.workoutRepository.save(entity);
     }
 
-    async findAll(page: number, take: number): Promise<Pagination<WorkoutEntity>> {
+    async findAll(page: number, take: number): Promise<Pagination<WorkoutListDto>> {
         const query = this.workoutRepository.createQueryBuilder('workout');
+        query.innerJoinAndSelect('workout.exercises', 'exercises');
+        query.leftJoinAndSelect('exercises.exercise', 'exercise');
+        query.leftJoinAndSelect('exercise.muscleGroup', 'muscleGroup');
         query.orderBy('workout.start', 'DESC');
 
-        return await toPaginationResult(query, page, take);
+        const transform = (entity: WorkoutEntity): WorkoutListDto => {
+            const dto = new WorkoutListDto();
+            dto.id = entity.id;
+            dto.userId = entity.userId;
+            dto.start = entity.start;
+            dto.end = entity.end;
+            dto.muscleGroups = [...new Set(entity.exercises.flatMap(x => x.exercise.muscleGroup.name))];;
+
+            return dto;
+        };
+
+        return await toPaginationResultTransform(query, page, take, transform);
     }
 
     async findOne(id: string): Promise<WorkoutEntity> {

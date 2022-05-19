@@ -15,3 +15,11 @@ export class ExerciseSetEntryDto {
     weight: number;
     unit: string;
 }
+
+export class WorkoutListDto {
+    id: string;
+    userId: string;
+    start: Date;
+    end: Date;
+    muscleGroups: string[];
+}

@@ -4,7 +4,7 @@ import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { Pagination } from '@/utility/pagination';
 import { WorkoutEntity } from '@/workout/workout.entity';
 import { WorkoutService } from '@/workout/workout.service';
-import { WorkoutDto } from '@/workout/workout.dto';
+import { WorkoutDto, WorkoutListDto } from '@/workout/workout.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('workouts')
@@ -20,7 +20,7 @@ export class WorkoutController {
     @Get()
     async index(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    ): Promise<Pagination<WorkoutEntity>> {
+    ): Promise<Pagination<WorkoutListDto>> {
         return await this.service.findAll(page, 10);
     }
 

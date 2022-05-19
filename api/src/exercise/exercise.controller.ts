@@ -19,7 +19,7 @@ export class ExerciseController {
     async index(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     ): Promise<Pagination<ExerciseEntity>> {
-        return await this.service.findAll(page, 25);
+        return await this.service.findAll(page, 1000);
     }
 
     @Get(':id')
