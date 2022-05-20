@@ -75,7 +75,9 @@
         <tab title="Description" icon="fa-file-alt">
           <div class="content" v-html="exercise?.description"></div>
         </tab>
-        <tab title="History" icon="fa-history">- No history -</tab>
+        <tab title="History" icon="fa-history">
+          <exercise-history :exercise-id="model.exerciseId" />
+        </tab>
       </tabs>
     </template>
   </card>
@@ -89,6 +91,7 @@ import TransitionList from "@/components/transition-list.vue";
 import Tab from "@/components/tab.vue";
 import Tabs from "@/components/tabs.vue";
 import ExerciseSetEntryEditor from "@/components/exercise-set-entry-editor.vue";
+import ExerciseHistory from "@/components/exercise-history.vue";
 import { useExercises } from "@/composables/useExercises";
 import { Exercise, ExerciseEntry, ExerciseSetEntry } from "@/types";
 import { remove, moveUp, moveDown } from "@/utilities";

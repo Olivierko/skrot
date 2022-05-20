@@ -9,6 +9,7 @@ import { WorkoutModule } from '@/workout/workout.module';
 import { CategoryModule } from '@/category/category.module';
 import { ExerciseModule } from '@/exercise/exercise.module';
 import { MuscleGroupModule } from '@/muscle-group/muscle-group.module';
+import { HistoryModule } from '@/history/history.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MuscleGroupModule } from '@/muscle-group/muscle-group.module';
     CategoryModule,
     ExerciseModule,
     MuscleGroupModule,
+    HistoryModule,
   ],
   controllers: [
     AppController,

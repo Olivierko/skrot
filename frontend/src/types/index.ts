@@ -61,3 +61,12 @@ export interface Credentials {
 export interface Profile {
     unit: string;
 }
+
+export interface ExerciseHistory {
+    date: Date;
+    totalWeight: Number;
+    totalSets: Number;
+    totalRepititions: Number;
+    unit: String;
+    notes: String[];
+}
