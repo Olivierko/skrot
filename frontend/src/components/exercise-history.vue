@@ -20,10 +20,20 @@ const chart = ref(null);
 
 onMounted(() => {
     getExerciseHistory(props.exerciseId).then((results) => {
-        const exerciseHistories = results.reverse().map(x => {
+        const exercises = results.reverse();
+
+        const byTotalWeight = exercises.map(x => {
             return {
                 x: `w.${toWeekNumber(new Date(x.date))}`,
                 y: x.totalWeight,
+                entry: x,
+            }
+        });
+
+        const byTotalRepititions = exercises.map(x => {
+            return {
+                x: `w.${toWeekNumber(new Date(x.date))}`,
+                y: x.totalRepititions,
                 entry: x,
             }
         });
@@ -32,28 +42,69 @@ onMounted(() => {
             chart: {
                 height: 350,
                 type: 'bar',
+                stacked: true,
+            },
+            theme: {
+                palette: 'palette9'
+            },
+            stroke: {
+                width: [0, 6]
+            },
+            dataLabels: {
+                enabled: false,
             },
             title: {
-                text: 'Total weight by week',
+                text: 'Exercise history by week',
                 align: 'left'
             },
             series: [
                 {
                     name: 'Total weight',
-                    data: exerciseHistories
+                    type: 'column',
+                    data: byTotalWeight
                 },
+                {
+                    name: 'Total repititions',
+                    type: 'line',
+                    data: byTotalRepititions
+                },
+            ],
+            yaxis: [
+                {
+                    title: {
+                        text: 'Weight',
+                        style: {
+                            fontSize:  '14px',
+                            fontWeight:  '0',
+                            fontFamily:  undefined,
+                            color:  '#5C4742'
+                        }
+                    },
+                }, 
+                {
+                    opposite: true,
+                    title: {
+                        text: 'Repititions',
+                        style: {
+                            fontSize:  '14px',
+                            fontWeight:  '0',
+                            fontFamily:  undefined,
+                            color:  '#A5978B'
+                        }
+                    }
+                }
             ],
             tooltip: {
                 custom: function(tooltip: any) {
-                var data = exerciseHistories[tooltip.dataPointIndex];
+                var data = exercises[tooltip.dataPointIndex];
                 
                 return '<div class="box">' +
-                    '<label class="label"><b>' + toPrettyDate(new Date(data.entry.date)) + '</b></label>' +
-                    '<label class="label">' + `${data.entry.totalSets} X ${(+data.entry.totalRepititions / +data.entry.totalSets)} X ${(+data.entry.totalWeight / +data.entry.totalRepititions)} ${data.entry.unit}` + '</label>' +
-                    '<label class="label">' + `${data.entry.totalWeight} ${data.entry.unit}` + '</label>' +
-                    '<label class="label">' + `x${data.entry.totalSets} sets` + '</label>' +
-                    '<label class="label">' + `x${data.entry.totalRepititions} repititions` + '</label>' +
-                    '<label class="label"><b>Notes</b>: ' + data.entry.notes.join('<br>') + '</label>' +
+                    '<label class="label"><b>' + toPrettyDate(new Date(data.date)) + '</b></label>' +
+                    '<label class="label">' + `${data.totalSets} X ${(+data.totalRepititions / +data.totalSets)} X ${(+data.totalWeight / +data.totalRepititions)} ${data.unit}` + '</label>' +
+                    '<label class="label">' + `${data.totalWeight} ${data.unit}` + '</label>' +
+                    '<label class="label">' + `x${data.totalSets} sets` + '</label>' +
+                    '<label class="label">' + `x${data.totalRepititions} repititions` + '</label>' +
+                    '<label class="label"><b>Notes</b>: ' + data.notes.join('<br>') + '</label>' +
                     '</div>';
                 }
             }
