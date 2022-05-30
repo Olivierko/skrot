@@ -21,7 +21,7 @@ export class WorkoutController {
     async index(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     ): Promise<Pagination<WorkoutListDto>> {
-        return await this.service.findAll(page, 10);
+        return await this.service.findAll(page, 20);
     }
 
     @Get(':id')

@@ -19,7 +19,7 @@ export class MuscleGroupController {
     async index(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     ): Promise<Pagination<MuscleGroupEntity>> {
-        return await this.service.findAll(page, 25);
+        return await this.service.findAll(page, 100);
     }
 
     @Get(':id')
