@@ -73,7 +73,17 @@
           <button @click="onAddSet" class="button is-dark is-fullwidth">Add set</button>
         </tab>
         <tab title="Description" icon="fa-file-alt">
-          <div class="content" v-html="exercise?.description"></div>
+          <div class="content">
+            <ul class="exercise-info">
+              <li>
+                <span class="has-text-weight-bold">Category:</span> {{ category?.name }}
+              </li>
+              <li>
+                <span class="has-text-weight-bold">Muscle group:</span> {{ muscleGroup?.name }}
+              </li>
+            </ul>
+            <div v-html="exercise?.description"></div>
+          </div>
         </tab>
         <tab title="History" icon="fa-history">
           <exercise-history :exercise-id="model.exerciseId" />
@@ -93,7 +103,9 @@ import Tabs from "@/components/tabs.vue";
 import ExerciseSetEntryEditor from "@/components/exercise-set-entry-editor.vue";
 import ExerciseHistory from "@/components/exercise-history.vue";
 import { useExercises } from "@/composables/useExercises";
-import { Exercise, ExerciseEntry, ExerciseSetEntry } from "@/types";
+import { useCategories } from "@/composables/useCategories";
+import { useMuscleGroups } from "@/composables/useMuscleGroups";
+import { Exercise, ExerciseEntry, ExerciseSetEntry, Category, MuscleGroup } from "@/types";
 import { remove, moveUp, moveDown } from "@/utilities";
 import { v4 as uuidv4 } from "uuid";
 
@@ -107,6 +119,8 @@ const props = defineProps({
 });
 
 const { find: findExercise } = useExercises();
+const { find: findCategory } = useCategories();
+const { find: findMuscleGroup } = useMuscleGroups();
 
 const model = computed<ExerciseEntry>({
   get() {
@@ -118,6 +132,8 @@ const model = computed<ExerciseEntry>({
 });
 
 const exercise = computed<Exercise | undefined>(() => findExercise(props.entry.exerciseId));
+const category = computed<Category | undefined>(() => findCategory(exercise.value!.categoryId));
+const muscleGroup = computed<MuscleGroup | undefined>(() => findMuscleGroup(exercise.value!.muscleGroupId));
 
 const isOpen = ref(false);
 const movingSetEntry = ref("");
@@ -176,5 +192,10 @@ tr {
 
 .list-item {
   position: relative;
+}
+
+.exercise-info {
+  list-style-type: none;
+  margin: 0;
 }
 </style>
