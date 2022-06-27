@@ -10,7 +10,7 @@
   <td>
     <div class="field">
       <div class="control">
-        <input class="input" type="number" v-model="model.weight" />
+        <input class="input" type="number" step="any" v-model="model.weight" />
       </div>
     </div>
   </td>
