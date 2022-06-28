@@ -6,3 +6,8 @@ export class HistoryExerciseDto {
     unit: String;
     notes: String[];
 }
+
+export class HistoryWorkoutDto {
+    start: Date;
+    end: Date;
+}

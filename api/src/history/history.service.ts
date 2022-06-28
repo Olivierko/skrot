@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { WorkoutEntity } from '@/workout/workout.entity';
-import { HistoryExerciseDto } from '@/history/history.dto';
+import { HistoryExerciseDto, HistoryWorkoutDto } from '@/history/history.dto';
 
 @Injectable()
 export class HistoryService {
@@ -57,6 +57,27 @@ export class HistoryService {
             results.push(exerciseHistory);
         }
         
+        return results;
+    }
+
+    async workouts(since: string, userId: string): Promise<HistoryWorkoutDto[]> {
+        const query = await this.repository
+            .createQueryBuilder('workout')
+            .orderBy('workout.start', 'DESC')
+            .where('workout.userId = :userId', { userId: userId })
+            .andWhere('workout.start > :since', { since: since });
+
+        const items = await query.getMany();
+
+        const results = [];
+        for (const workout of items) {
+            const workoutHistory = new HistoryWorkoutDto();
+            workoutHistory.start = workout.start;
+            workoutHistory.end = workout.end;
+
+            results.push(workoutHistory);
+        }
+
         return results;
     }
 }

@@ -70,3 +70,8 @@ export interface ExerciseHistory {
     unit: String;
     notes: String[];
 }
+
+export interface WorkoutHistory {
+    start: Date;
+    end: Date;
+}
