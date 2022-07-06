@@ -49,6 +49,8 @@ const defaultWorkout: Workout = {
   id: "",
   start: new Date(),
   end: new Date(),
+  name: null,
+  muscleGroups: [],
   exercises: [],
 };
 
@@ -72,6 +74,7 @@ const notificationMessage = ref("");
 const onCancel = () => {
   defaultWorkout.start = new Date();
   defaultWorkout.end = new Date();
+  defaultWorkout.name = null;
 
   reset();
   router.push({ name: "/workout/list" });

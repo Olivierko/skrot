@@ -48,6 +48,8 @@ const model = reactive<Workout>({
   id: "",
   start: new Date(),
   end: new Date(),
+  name: null,
+  muscleGroups: [],
   exercises: [],
 });
 
@@ -65,6 +67,7 @@ const onSubmit = async () => {
 
 onMounted(async () => {
   const workout = await get(props.id);
+  model.name = workout.name;
   model.exercises = workout.exercises;
 });
 </script>

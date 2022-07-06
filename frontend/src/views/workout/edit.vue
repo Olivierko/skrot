@@ -65,6 +65,8 @@ const model = reactive<Workout>({
   id: props.id,
   start: new Date(),
   end: new Date(),
+  name: null,
+  muscleGroups: [],
   exercises: [],
 });
 
@@ -96,6 +98,7 @@ onMounted(async () => {
   const workout = await get(props.id);
   model.start = workout.start;
   model.end = workout.end;
+  model.name = workout.name;
   model.exercises = workout.exercises;
 });
 </script>

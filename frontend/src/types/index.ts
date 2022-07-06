@@ -29,6 +29,7 @@ export interface Workout {
     id: string;
     start: Date;
     end: Date;
+    name: string | null;
     exercises: ExerciseEntry[];
     muscleGroups: string[];
 }

@@ -1,6 +1,7 @@
 export class WorkoutDto {
     start: Date;
     end: Date;
+    name: string;
     exercises: Array<ExerciseEntryDto>;
 }
 
@@ -21,5 +22,6 @@ export class WorkoutListDto {
     userId: string;
     start: Date;
     end: Date;
+    name: string;
     muscleGroups: string[];
 }

@@ -20,7 +20,7 @@
                 <abbr title="Duration">Duration</abbr>
               </th>
               <th>
-                <abbr title="Exercise groups">Exercise groups</abbr>
+                <abbr title="Name">Name/Muscle groups</abbr>
               </th>
               <th>&nbsp;</th>
             </tr>
@@ -29,7 +29,7 @@
             <tr v-for="workout in workouts" :key="workout.id" class="list-item">
               <td>{{ toPrettyDate(workout.start) }}</td>
               <td>{{ toDifference(workout.start, workout.end) }}</td>
-              <td>{{ workout.muscleGroups.join(', ') }}</td>
+              <td>{{ displayName(workout) }}</td>
               <td class="is-narrow">
                 <div class="field has-addons is-pulled-right">
                   <p class="control">
@@ -67,6 +67,12 @@ import Pagination from "@/components/pagination.vue";
 
 const router = useRouter();
 const { workouts, page, pages, count, isLoading } = useWorkouts();
+
+const displayName = (workout: Workout) => {
+  return (workout.name === undefined || workout.name === null || workout.name.length === 0) 
+    ? workout.muscleGroups.join(', ')
+    : workout.name;
+};
 
 const copy = async (workout: Workout) => {
   router.push({ name: "/workout/copy", params: { id: workout.id } });

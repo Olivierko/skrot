@@ -20,6 +20,9 @@ export class WorkoutEntity {
   @Column({ type: 'datetime' })
   end: Date;
 
+  @Column({ nullable: true })
+  name: string;
+
   @OneToMany(() => ExerciseEntryEntity, x => x.workout, { cascade: true })
   exercises: ExerciseEntryEntity[];
 

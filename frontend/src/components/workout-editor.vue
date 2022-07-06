@@ -1,7 +1,13 @@
 <template>
   <section class="section has-background-dark">
     <div class="container">
-      <p class="title has-text-white">When</p>
+      <div class="field">
+        <label class="label has-text-light">Name</label>
+        <div class="control">
+          <input class="input" type="text" v-model="model.name" />
+        </div>
+      </div>
+
       <div class="field">
         <label class="label has-text-light">Start</label>
         <div class="control">

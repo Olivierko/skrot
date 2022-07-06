@@ -16,6 +16,7 @@ export class WorkoutService {
         const entity = new WorkoutEntity();
         entity.start = dto.start;
         entity.end = dto.end;
+        entity.name = dto.name;
         entity.exercises = [];
 
         let exerciseOrder = 1;
@@ -62,6 +63,7 @@ export class WorkoutService {
             dto.userId = entity.userId;
             dto.start = entity.start;
             dto.end = entity.end;
+            dto.name = entity.name;
             dto.muscleGroups = [...new Set(entity.exercises.flatMap(x => x.exercise.muscleGroup.name))];;
 
             return dto;
