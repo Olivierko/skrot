@@ -1,4 +1,7 @@
 <template>
+  <div class="p-5">
+    <input class="input" type="date" placeholder="Text input" v-model="startDateInput">
+  </div>
   <div class="tile is-ancestor m-5">
     <div class="tile is-parent">
       <article class="tile is-child box notification" ref="workoutsByWeekChart">
@@ -7,34 +10,37 @@
     </div>
     <div class="tile is-parent">
       <article class="tile is-child box notification widget">
-        <p class="title">439k</p>
-        <p class="subtitle">Users</p>
+        <p class="title">{{ toElapsedTime(averageDuration) }}</p>
+        <p class="subtitle">Average workout length</p>
       </article>
     </div>
     <div class="tile is-parent">
       <article class="tile is-child box notification widget">
-        <p class="title">59k</p>
-        <p class="subtitle">Products</p>
+        <p class="title">{{ averageWorkoutsPerWeek }}</p>
+        <p class="subtitle">Average workouts per week</p>
       </article>
     </div>
     <div class="tile is-parent">
       <article class="tile is-child box notification widget">
-        <p class="title">3.4k</p>
-        <p class="subtitle">Open Orders</p>
+        <p class="title">{{ totalWorkouts }}</p>
+        <p class="subtitle">Total workouts</p>
       </article>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import ApexCharts from "apexcharts";
 import { useHistory } from "@/composables/useHistory";
-import { toWeekNumber } from "@/utilities/date";
+import { toElapsedTime, toWeekNumber } from "@/utilities/date";
 import { groupBy } from "@/utilities/grouping";
 
 const { getWorkoutHistory } = useHistory();
 const workoutsByWeekChart = ref(null);
+const averageDuration = ref(0);
+const averageWorkoutsPerWeek = ref(0);
+const totalWorkouts = ref(0);
 
 const calculateStartDate = (): Date => {
   const firstDayOfWeekIndex = 1;
@@ -51,6 +57,9 @@ const calculateStartDate = (): Date => {
   return start;
 };
 
+const startDate = calculateStartDate();
+const startDateInput = ref(startDate.toISOString().split('T')[0]);
+
 const generateWeeks = (start: Date, end: Date): number[] => {
   const weeks = [];
   var date = new Date(start);
@@ -62,18 +71,38 @@ const generateWeeks = (start: Date, end: Date): number[] => {
   return [...new Set(weeks)];
 };
 
+// replace with a click event 
+watch(startDateInput, (newValue, _oldValue) => {
+  updateCharts();
+});
+
 onMounted(async () => {
-  const since = calculateStartDate();
+  await updateCharts();
+});
+
+const updateCharts = async () => {
+  const since = new Date(startDateInput.value);
   const weeks = generateWeeks(since, new Date());
   const workouts = await getWorkoutHistory(since);
 
   let data: { x: String, y: Number }[] = [];
   const groupedByWeek = groupBy(workouts, (workout) => toWeekNumber(new Date(workout.start)));
 
+  let totalDuration = 0;
+  workouts.forEach(workout => {
+    totalDuration += new Date(workout.end).getTime() - new Date(workout.start).getTime();
+  });
+
+  averageDuration.value = totalDuration / workouts.length;
+  averageWorkoutsPerWeek.value = workouts.length / weeks.length;
+  totalWorkouts.value = workouts.length;
+
   weeks.forEach(week => {
+    const workouts = groupedByWeek[week]?.length ?? 0;
+    
     data.push({
       x: `w.${week}`,
-      y: groupedByWeek[week]?.length ?? 0
+      y: workouts
     });
   });
 
@@ -96,7 +125,7 @@ onMounted(async () => {
 
   var apexChart = new ApexCharts(workoutsByWeekChart.value, options);
   apexChart.render();
-});
+};
 </script>
 
 <style scoped>

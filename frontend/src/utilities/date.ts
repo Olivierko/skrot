@@ -10,9 +10,7 @@ export const toPrettyDate = (date: Date): string => {
     return `${date.toJSON().split('T')[0]} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 };
 
-export const toDifference = (start: Date, end: Date): string => {
-    const ms = end.getTime() - start.getTime();
-
+export const toElapsedTime = (ms: number): string => {
     const days = Math.floor(ms / 86400000);
     const hours = Math.floor(ms / 3600000 % 24);
     const minutes = Math.floor(ms / 60000 % 60);
@@ -37,6 +35,11 @@ export const toDifference = (start: Date, end: Date): string => {
     }
 
     return result;
+}
+
+export const toDifference = (start: Date, end: Date): string => {
+    const ms = end.getTime() - start.getTime();
+    return toElapsedTime(ms);
 };
 
 export const toWeekNumber = (date: Date): number => {
