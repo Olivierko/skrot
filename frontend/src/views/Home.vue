@@ -4,7 +4,7 @@
   </div>
   <div class="tile is-ancestor m-5">
     <div class="tile is-parent">
-      <article class="tile is-child box notification" ref="workoutsByWeekChart">
+      <article class="tile is-child box notification" ref="workoutsByWeekChartContainer">
         <p class="title">Workouts by week</p>
       </article>
     </div>
@@ -37,10 +37,11 @@ import { toElapsedTime, toWeekNumber } from "@/utilities/date";
 import { groupBy } from "@/utilities/grouping";
 
 const { getWorkoutHistory } = useHistory();
-const workoutsByWeekChart = ref(null);
+const workoutsByWeekChartContainer = ref(null);
 const averageDuration = ref(0);
 const averageWorkoutsPerWeek = ref(0);
 const totalWorkouts = ref(0);
+var workoutsByWeekChart: ApexCharts;
 
 const calculateStartDate = (): Date => {
   const firstDayOfWeekIndex = 1;
@@ -77,6 +78,18 @@ watch(startDateInput, (newValue, _oldValue) => {
 });
 
 onMounted(async () => {
+  workoutsByWeekChart = new ApexCharts(workoutsByWeekChartContainer.value, {
+    chart: {
+      height: 350,
+      type: 'bar',
+    },
+    theme: {
+      palette: 'palette9'
+    },
+    series: [],
+  });
+
+  workoutsByWeekChart.render();
   await updateCharts();
 });
 
@@ -106,25 +119,11 @@ const updateCharts = async () => {
     });
   });
 
-  var options = {
-    chart: {
-      height: 350,
-      type: 'bar',
-    },
-    theme: {
-      palette: 'palette9'
-    },
-    series: [
-      {
-        name: 'Number of workouts',
-        type: 'column',
-        data: data
-      },
-    ],
-  };
-
-  var apexChart = new ApexCharts(workoutsByWeekChart.value, options);
-  apexChart.render();
+  workoutsByWeekChart.updateSeries([{
+    name: 'Number of workouts',
+    type: 'column',
+    data: data
+  }]);
 };
 </script>
 
