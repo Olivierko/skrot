@@ -21,7 +21,7 @@ export function useHistory() {
 
     const getWorkoutHistory = async (since: Date): Promise<WorkoutHistory[]> => {
         const params = new URLSearchParams({
-            since: since.toISOString()
+            since: since.toISOString().split('T')[0]
         });
 
         const response = await invoke("/history/workouts", {

@@ -65,7 +65,7 @@ export class HistoryService {
             .createQueryBuilder('workout')
             .orderBy('workout.start', 'DESC')
             .where('workout.userId = :userId', { userId: userId })
-            .andWhere('workout.start > :since', { since: since });
+            .andWhere('workout.start >= :since', { since: since });
 
         const items = await query.getMany();
 
