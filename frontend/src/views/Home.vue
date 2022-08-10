@@ -54,6 +54,7 @@ const calculateStartDate = (): Date => {
 
   start.setDate(start.getDate() - diff);
   start.setHours(0, 0, 0, 0);
+  start.setTime(start.getTime() - start.getTimezoneOffset() * 60000);
 
   return start;
 };
